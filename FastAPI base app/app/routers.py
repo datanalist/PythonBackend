@@ -4,6 +4,11 @@ from starlette.responses import FileResponse
 import datetime
 router = APIRouter()
 
+pets = dict(dolphin="../pictures/dolphin-coming-out-the-water.jpg",
+                cat="../pictures/cat.jpg",
+                dog="../pictures/pesel.jpg",
+                student="../pictures/student.jpg")
+
 
 @router.get("/")
 def read_root():  # noqa: D103
@@ -11,21 +16,8 @@ def read_root():  # noqa: D103
     return "Hello World!"
 
 
-@router.get("/items/{item_id}")
-async def read_item(item_id: int) -> dict:
-    """
-    Async function. Return item id
-
-    Args:
-        item_id (int): id of item
-
-    Returns:
-        dict(item_id=item_id)"""
-    return {"item_id": item_id}
-
-
-@router.get("/users/")
-async def read_user(user_id: str, q: str | None = None) -> dict:
+@router.get("/sometext/")
+async def read_user(user_id: str, text: str | None = None) -> dict:
     """
     Async function. Return information about user
 
@@ -36,9 +28,7 @@ async def read_user(user_id: str, q: str | None = None) -> dict:
     Returns:
         dict(item_id=user_id, q=q) | dict(item_id=user_id)
     """
-    if q:
-        return {"item_id": user_id, "q": q}
-    return {"item_id": user_id}
+    return {"user_id": user_id, "text": text}
 
 
 @router.get("/info/{get_info}")
@@ -76,11 +66,6 @@ async def get_animal_pict(type_of: str | None = None) -> FileResponse | str:
     Returns:
         object (FileResponse)
     """
-    global pets
-    pets = dict(dolphin="../pictures/dolphin-coming-out-the-water.jpg",
-                cat="../pictures/cat.jpg",
-                dog="../pictures/pesel.jpg",
-                student="../pictures/student.jpg")
     try:
         if type_of == "dolphin":
             return FileResponse(pets["dolphin"])
@@ -96,57 +81,13 @@ async def get_animal_pict(type_of: str | None = None) -> FileResponse | str:
         return "No such pictures!"
 
 
-@router.get("/users/{user_id}/items/{item_id}")
-async def read_user_item(
-        user_id: int,
-        item_id: str,
-        q: str | None = None,
-        short: bool = False) -> dict:
-    """
-    Update item by id
-
-    Args:
-        user_id (int): id of user
-        item_id (str): id of item
-        q (str | None): some description
-        short (bool): marker
-
-    Returns:
-        dict: updated item for user
-    """
-    item: dict[str, str | int] = dict(item_id=item_id, owner_id=user_id)
-    if q:
-        item.update({"q": q})
-    if not short:
-        item.update(
-            {"description": "This is an amazing item that has a long description"}
-        )
-    return item
-
-
-@router.post("/items/")
-async def create_item(item: contracts.Item) -> dict:
-    """
-    Create some custom item
-
-    Args:
-        item (contracts.Item): some item
-
-    Returns:
-        dict: updated item
-    """
-    item_dict = item.dict()
-    if item.tax:
-        price_with_tax = item.price + item.tax
-        item_dict.update({"price_with_tax": price_with_tax})
-    return item_dict
-
 @router.post("/person/")
-async def create_person(data: contracts.Person) -> dict:
+async def create_person(person: contracts.Person) -> dict:
     """
     Input personal data about person
 
     Args:
+        data:
         user_id (str): id fo user
         name (str): user's name
         last_name (str): user's lastname
@@ -157,12 +98,13 @@ async def create_person(data: contracts.Person) -> dict:
     Returns:
         dict: fields of personal data
     """
-    data_dict = data.dict()
-    assert data_dict.gender in ["male", "female"]
-    data_dict.gender = map(lambda x: 1 if x == "male" else 0, data_dict.gender)
-    if data_dict.age:
-        birth_year = datetime.date.today().year - data_dict.age
-        data_dict.update({"birth_year": birth_year})
-    if data_dict.pet in pets.keys():
-        data_dict.update({"pet's photo": f"http://127.0.0.1:8000/picture/{pets[data_dict.pet]}"})
-    return data_dict
+    person_dict = person.dict()
+
+    assert person.gender in ["male", "female"]
+    person_dict["gender"] = 1 if person.gender  == "male" else 0
+    if person.age:
+        birth_year = datetime.date.today().year - person.age
+        person_dict.update({"birth_year": birth_year})
+    if person.pet in pets.keys():
+        person_dict.update({"pet's photo": f"http://127.0.0.1:8000/picture/{person.pet}"})
+    return person_dict
