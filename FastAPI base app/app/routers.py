@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from app import contracts
 from starlette.responses import FileResponse
-
+import datetime
 router = APIRouter()
 
 
@@ -76,19 +76,20 @@ async def get_animal_pict(type_of: str | None = None) -> FileResponse | str:
     Returns:
         object (FileResponse)
     """
-    DOLPHIN: str = "../pictures/dolphin-coming-out-the-water.jpg"
-    CAT: str = "../pictures/cat.jpg"
-    DOG: str = "../pictures/pesel.jpg"
-    STUDENT: str = "../pictures/student.jpg"
+    global pets
+    pets = dict(dolphin="../pictures/dolphin-coming-out-the-water.jpg",
+                cat="../pictures/cat.jpg",
+                dog="../pictures/pesel.jpg",
+                student="../pictures/student.jpg")
     try:
         if type_of == "dolphin":
-            return FileResponse(DOLPHIN)
+            return FileResponse(pets["dolphin"])
         elif type_of == "cat":
-            return FileResponse(CAT)
+            return FileResponse(pets["cat"])
         elif type_of == "dog":
-            return FileResponse(DOG)
+            return FileResponse(pets["dog"])
         elif type_of == "student":
-            return FileResponse(STUDENT)
+            return FileResponse(pets["student"])
         else:
             raise Exception
     except Exception:
@@ -102,7 +103,7 @@ async def read_user_item(
         q: str | None = None,
         short: bool = False) -> dict:
     """
-    Update item by it's id
+    Update item by id
 
     Args:
         user_id (int): id of user
@@ -126,6 +127,7 @@ async def read_user_item(
 @router.post("/items/")
 async def create_item(item: contracts.Item) -> dict:
     """
+    Create some custom item
 
     Args:
         item (contracts.Item): some item
@@ -138,3 +140,29 @@ async def create_item(item: contracts.Item) -> dict:
         price_with_tax = item.price + item.tax
         item_dict.update({"price_with_tax": price_with_tax})
     return item_dict
+
+@router.post("/person/")
+async def create_person(data: contracts.Person) -> dict:
+    """
+    Input personal data about person
+
+    Args:
+        user_id (str): id fo user
+        name (str): user's name
+        last_name (str): user's lastname
+        city (str): user's hometown
+        gender (str): male/female
+        pet (str | None): person's pet
+        age (int): age
+    Returns:
+        dict: fields of personal data
+    """
+    data_dict = data.dict()
+    assert data_dict.gender in ["male", "female"]
+    data_dict.gender = map(lambda x: 1 if x == "male" else 0, data_dict.gender)
+    if data_dict.age:
+        birth_year = datetime.date.today().year - data_dict.age
+        data_dict.update({"birth_year": birth_year})
+    if data_dict.pet in pets.keys():
+        data_dict.update({"pet's photo": f"http://127.0.0.1:8000/picture/{pets[data_dict.pet]}"})
+    return data_dict
