@@ -1,33 +1,21 @@
-==========================
-FastAPI base project
-==========================
+=============================
+Решение домашнего задания №1
+=============================
 
-Poetry initial setup
+Установка зависимостей
 -------------------------------------------------------------------------------
-- Configure Poetry **(should be done once globally)**:
+- Установка Poetry, установка зависимостей из poetry.lock:
 
 .. code::
 
-    poetry config virtualenvs.in-project false
-    poetry config virtualenvs.path <conda-install-path>/envs
-
-Packages installation
--------------------------------------------------------------------------------
-- Create and activate *conda* virtual environment for development:
-
-.. code::
-
-    conda create -n BaseApp python=3.10
-    conda activate BaseApp
-
-- Install dependencies with Poetry:
-
-.. code::
-
+    pip install poetry
     poetry install
 
-- Start with
+Запуск приложения
+-------------------------------------------------------------------------------
+- Выполните в командной строке:
 
 .. code::
 
+    cd FastAPI\ base\ app/
     uvicorn app.main:app
