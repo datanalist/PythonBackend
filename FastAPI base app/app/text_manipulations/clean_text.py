@@ -1,4 +1,7 @@
-def clean_text(text):
+import re
+from pprint import pprint
+
+def clean_text(text: str) -> str:
     """
     Очистить текст от лишних символов и слов
     Args:
@@ -15,8 +18,18 @@ def clean_text(text):
     text = re.sub("-\s\r\n\|-\s\r\n|\r\n", '', str(text))
 
     text = re.sub("[0-9]|[-—.,:;_%©«»?*!@#№$^•·&()]|[+=]|[[]|[]]|[/]|", '', text)
-    text = re.sub(r"\r\n\t|\n|\\s|\r\t|\\n", ' ', text)
-    text = re.sub(r'[\xad]|[\s+]', ' ', text.strip())
-    text = re.sub('n', ' ', text)
+    text = re.sub(r"\r\n\t|\n|\\s|\r\t|\\n", '', text)
+    text = re.sub(r'[\xad]|[\s+]', ' ', text)
+    text = re.sub(r'[\\<>{}/|]', '', text)
+    text = re.sub('n', '', text)
 
-    return text
+    return " ".join(text.split())
+
+if __name__ == "__main__":
+    pprint(clean_text(
+        """№№ #$!@#$%^&*)_++==
+        1234567890
+        И было Слово
+        И не было. А все таки?
+        <>:?}|{|||\/"""
+    ))

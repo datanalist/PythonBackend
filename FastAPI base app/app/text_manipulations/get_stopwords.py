@@ -1,6 +1,5 @@
 import nltk
 from nltk.corpus import stopwords
-import os
 
 
 def get_stopwords():
@@ -19,4 +18,3 @@ def get_stopwords():
 
 if __name__ == "__main__":
     assert 776==len(get_stopwords())
-    os.remove("stopwords.txt")
