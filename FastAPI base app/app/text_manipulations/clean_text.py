@@ -1,6 +1,7 @@
 import re
 from pprint import pprint
 
+
 def clean_text(text: str) -> str:
     """
     Очистить текст от лишних символов и слов
@@ -22,8 +23,8 @@ def clean_text(text: str) -> str:
     text = re.sub(r'[\xad]|[\s+]', ' ', text)
     text = re.sub(r'[\\<>{}/|]', '', text)
     text = re.sub('n', '', text)
-
     return " ".join(text.split())
+
 
 if __name__ == "__main__":
     pprint(clean_text(

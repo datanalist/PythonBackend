@@ -1,3 +1,10 @@
+import pymorphy2
+from razdel import tokenize
+from pprint import pprint
+
+from get_stopwords import get_stopwords
+
+
 def text_lemmatize(text):
     """
     Лемматизация текста
@@ -14,11 +21,8 @@ def text_lemmatize(text):
     Returns:
         list(str): лемматизированные слова текста пользователя
     """
-    '''
-    
-
-    на выходе лист лемматизированых токенов
-    '''
+    cache = {}
+    morph = pymorphy2.MorphAnalyzer()
 
     # [0]
     if not isinstance(text, str):
@@ -39,6 +43,16 @@ def text_lemmatize(text):
                 temp_cach = cache[w] = morph.parse(w)[0].normal_form
                 words_lem.append(temp_cach)
 
-    words_lem_without_stopwords = [i for i in words_lem if not i in stopword_ru]  # [6]
+    words_lem_without_stopwords = [i for i in words_lem if not i in get_stopwords()]  # [6]
 
     return words_lem_without_stopwords
+
+
+if __name__ == "__main__":
+    pprint(" ".join(text_lemmatize("""
+    Первый закон кибернетики: невозможно создать вечный двигатель первого рода.
+Второй закон кибернетики: количество информации в системе ограничено и не может превышать ее энтропию.
+Третий закон кибернетики: информация должна быть структурирована для того, чтобы быть полезной.
+Четвертый закон кибернетики: любая система стремится к состоянию максимальной энтропии, если на нее не действуют внешние факторы.
+Пятый закон кибернетики: система может быть описана с помощью математической модели, если она является достаточно простой и линейной"""
+                                  )))
