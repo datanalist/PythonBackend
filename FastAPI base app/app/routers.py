@@ -2,33 +2,31 @@ from fastapi import APIRouter
 from app import contracts
 from starlette.responses import FileResponse
 import datetime
-router = APIRouter()
+from text_manipulations import get_stopwords, clean_text, text_lemmatize
 
-pets = dict(dolphin="../pictures/dolphin-coming-out-the-water.jpg",
-                cat="../pictures/cat.jpg",
-                dog="../pictures/pesel.jpg",
-                student="../pictures/student.jpg")
+router = APIRouter()
 
 
 @router.get("/")
 def read_root():  # noqa: D103
     """Ordinary function. Print Hello World!"""
-    return "Hello World!"
+    return "This is the start page! You can go to /clean_text/ or to /text_lemmatize/"
 
 
-@router.get("/sometext/")
-async def read_user(user_id: str, text: str | None = None) -> dict:
+@router.get("/clean_text/{person}/{text}")
+async def get_text(person: contracts.PersonDB, text: str | None = None) -> str:
     """
-    Async function. Return information about user
-
+    Async function. Return user's text without stopwords and service symbols
     Args:
-        user_id (str): id for user
-        q (str): some description
+        text (str): user's text
 
     Returns:
-        dict(item_id=user_id, q=q) | dict(item_id=user_id)
+        str: text without topwords and service symbols
     """
-    return {"user_id": user_id, "text": text}
+    person_db = person.dict()
+    get_stopwords()
+    person_db.update({"users_clean_text": clean_text(text)})
+    return person_db
 
 
 @router.get("/info/{get_info}")

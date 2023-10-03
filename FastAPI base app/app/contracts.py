@@ -10,3 +10,8 @@ class Person(BaseModel):
     gender: str = "male"
     pet: str | None = "dog"
     age: int = "39"
+
+class PersonDB(BaseModel):
+    """Contract for user by his id"""
+    user_id:str = "6513"
+    name: str = "Winer"
