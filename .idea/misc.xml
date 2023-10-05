@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectRootManager" version="2" project-jdk-name="conda_nev" project-jdk-type="Python SDK" />
+  <component name="Black">
+    <option name="sdkUUID" value="2d0843d7-a4a1-417f-889b-60c9d9f73de9" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Poetry (PythonBackend) (2)" project-jdk-type="Python SDK" />
 </project>

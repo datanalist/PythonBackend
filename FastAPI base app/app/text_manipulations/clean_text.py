@@ -15,22 +15,20 @@ def clean_text(text: str) -> str:
         text = str(text)
 
     text = text.lower()
-    text = text.strip('\n').strip('\r').strip('\t')
+    text = text.strip('\r').strip('\t')
+    text = text.replace("\n", " ")
     text = re.sub("-\s\r\n\|-\s\r\n|\r\n", '', str(text))
 
     text = re.sub("[0-9]|[-—.,:;_%©«»?*!@#№$^•·&()]|[+=]|[[]|[]]|[/]|", '', text)
     text = re.sub(r"\r\n\t|\n|\\s|\r\t|\\n", '', text)
     text = re.sub(r'[\xad]|[\s+]', ' ', text)
     text = re.sub(r'[\\<>{}/|]', '', text)
-    text = re.sub('n', '', text)
+    text = re.sub('n', ' ', text)
     return " ".join(text.split())
 
 
 if __name__ == "__main__":
     pprint(clean_text(
-        """№№ #$!@#$%^&*)_++==
-        1234567890
-        И было Слово
-        И не было. А все таки?
-        <>:?}|{|||\/"""
+        "№№ $!@#$%^&*)_++==1234567890И было Слово И не было. А все та"
+        "+ки?<>:?}|{|||"
     ))

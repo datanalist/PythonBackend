@@ -2,7 +2,7 @@ import pymorphy2
 from razdel import tokenize
 from pprint import pprint
 
-from get_stopwords import get_stopwords
+from .get_stopwords import get_stopwords
 
 
 def text_lemmatize(text):
@@ -21,6 +21,7 @@ def text_lemmatize(text):
     Returns:
         list(str): лемматизированные слова текста пользователя
     """
+    stop_words = get_stopwords()
     cache = {}
     morph = pymorphy2.MorphAnalyzer()
 
@@ -43,7 +44,7 @@ def text_lemmatize(text):
                 temp_cach = cache[w] = morph.parse(w)[0].normal_form
                 words_lem.append(temp_cach)
 
-    words_lem_without_stopwords = [i for i in words_lem if not i in get_stopwords()]  # [6]
+    words_lem_without_stopwords = [i for i in words_lem if not i in stop_words]  # [6]
 
     return words_lem_without_stopwords
 
