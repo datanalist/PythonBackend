@@ -2,10 +2,11 @@ import pymorphy2
 from razdel import tokenize
 from pprint import pprint
 
+
 from .get_stopwords import get_stopwords
 
 
-def text_lemmatize(text):
+def text_lemmatize(text, stop_list: list | None = None):
     """
     Лемматизация текста
         [0] если зашел тип не `str` делаем его `str`
@@ -18,10 +19,13 @@ def text_lemmatize(text):
     Args:
         text: очищенный текст
 
+
+
     Returns:
         list(str): лемматизированные слова текста пользователя
     """
-    stop_words = get_stopwords()
+    stop_words = get_stopwords() if  stop_list is None else stop_list
+
     cache = {}
     morph = pymorphy2.MorphAnalyzer()
 
@@ -56,4 +60,4 @@ if __name__ == "__main__":
 Третий закон кибернетики: информация должна быть структурирована для того, чтобы быть полезной.
 Четвертый закон кибернетики: любая система стремится к состоянию максимальной энтропии, если на нее не действуют внешние факторы.
 Пятый закон кибернетики: система может быть описана с помощью математической модели, если она является достаточно простой и линейной"""
-                                  )))
+                                   )))

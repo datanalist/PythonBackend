@@ -1,10 +1,17 @@
 from fastapi import APIRouter
 from app import contracts
+
 from starlette.responses import FileResponse
 import datetime
-from .text_manipulations import get_stopwords, clean_text, text_lemmatize
+from .text_manipulations import clean_text, text_lemmatize, get_stopwords
 
-router = APIRouter()
+router: APIRouter = APIRouter()
+
+pets = dict(dolphin="../pictures/dolphin-coming-out-the-water.jpg",
+                cat="../pictures/cat.jpg",
+                dog="../pictures/pesel.jpg",
+                student="../pictures/student.jpg")
+
 
 
 @router.get("/")
@@ -16,19 +23,42 @@ def read_root():  # noqa: D103
 @router.post("/clean_text/")
 async def get_clean_text(person: contracts.PersonDB) -> dict:
     """
-    Async function. Return user's text without stopwords and service symbols
+    Async function. Return user's text without service symbols
     Args:
-        text (str): user's text
+       person: user representation in DB
+       user_id (str): user id
+       name (str): username
+       user_text (str | None): arbitrary user text
 
     Returns:
-        dict: user having text without stopwords and service symbols
+        dict: user's representation in DB with text without service symbols
     """
     person_db = person.dict()
-    get_stopwords()
     person_db.update({"users_clean_text": clean_text(person.user_text).encode("utf-8")})
 
     return person_db
 
+
+@router.post("/lemmatize_text/")
+async def lemmatize_text(person: contracts.PersonDB) -> dict:
+    """
+    Lemmatize user's text, return it and write it to DB
+    Args:
+        person (contracts.PersonDB): user representation in DB
+        user_id (str): user id
+        name (str): username
+        user_text (str | None): arbitrary user text
+
+    Returns:
+        str: lemmatizated user text
+    """
+    stop_list = get_stopwords()
+    person_db = person.dict()
+    cleaned_text = clean_text(person.user_text)
+    person_db.update({"users_clean_text": cleaned_text})
+    lemmatized_text = " ".join(text_lemmatize(person_db["users_clean_text"], stop_list))
+    person_db.update({"users_lemmatized_text": lemmatized_text})
+    return person_db["users_lemmatized_text"]
 
 @router.get("/info/{get_info}")
 async def read_info(get_info: str | None = None) -> object | str:
@@ -100,7 +130,7 @@ async def create_person(person: contracts.Person) -> dict:
     person_dict = person.dict()
 
     assert person.gender in ["male", "female"]
-    person_dict["gender"] = 1 if person.gender  == "male" else 0
+    person_dict["gender"] = 1 if person.gender == "male" else 0
     if person.age:
         birth_year = datetime.date.today().year - person.age
         person_dict.update({"birth_year": birth_year})
