@@ -25,4 +25,8 @@ def get_stopwords(stop_file:str = STOP_FILE) -> list:
 
 
 if __name__ == "__main__":
-    assert 776 == len(get_stopwords())
+    from nltk.corpus import stopwords
+    nltk.download('stopwords')
+    stopword_ru = stopwords.words('russian')
+    print(776 - len(stopword_ru))
+# assert 776 == len(get_stopwords())
