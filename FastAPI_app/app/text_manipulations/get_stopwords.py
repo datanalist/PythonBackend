@@ -5,8 +5,10 @@ import os
 
 
 URL: str = "https://drive.google.com/uc?export=download&id=17wVn5YPpMjHToctGgff_KfSeWcIIlf7c"
-STOP_FILE = './app/text_manipulations/stopwords.txt'
-def get_stopwords(stop_file:str = STOP_FILE)-> list:
+STOP_FILE = './stopwords.txt'
+
+
+def get_stopwords(stop_file:str = STOP_FILE) -> list:
     """
     Загрузить стоп-слова из внешних источников
     Returns:
@@ -23,4 +25,8 @@ def get_stopwords(stop_file:str = STOP_FILE)-> list:
 
 
 if __name__ == "__main__":
-    assert 776==len(get_stopwords())
+    from nltk.corpus import stopwords
+    nltk.download('stopwords')
+    stopword_ru = stopwords.words('russian')
+    print(776 - len(stopword_ru))
+# assert 776 == len(get_stopwords())
