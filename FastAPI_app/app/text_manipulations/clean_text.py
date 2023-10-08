@@ -24,8 +24,8 @@ def clean_text(text: str) -> str:
     text = re.sub(r'[\xad]|[\s+]', ' ', text)
     text = re.sub(r'[\\<>{}/|]', '', text)
     text = re.sub('n', ' ', text)
-    return " ".join(text.split())
-
+    result: str = " ".join(text.split())
+    return result
 
 if __name__ == "__main__":
     pprint(clean_text(
