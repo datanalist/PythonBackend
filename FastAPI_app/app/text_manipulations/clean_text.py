@@ -18,7 +18,6 @@ def clean_text(text: str) -> str:
     text = text.strip('\r').strip('\t')
     text = text.replace("\n", " ")
     text = re.sub("-\s\r\n\|-\s\r\n|\r\n", '', str(text))
-
     text = re.sub("[0-9]|[-—.,:;_%©«»?*!@#№$^•·&()]|[+=]|[[]|[]]|[/]|", '', text)
     text = re.sub(r"\r\n\t|\n|\\s|\r\t|\\n", '', text)
     text = re.sub(r'[\xad]|[\s+]', ' ', text)

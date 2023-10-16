@@ -7,7 +7,7 @@
         ** Проверка успешной конкатенации списков стоп-слов с разных источников
 
 Examples:
-    $ pytest test_get-stopwords.py
+    $ pytest test_get_stopwords.py
 
 Returns:
     > ==== 3 passed in 1.13s ====
@@ -15,6 +15,7 @@ Returns:
 
 import pytest
 import requests
+
 from FastAPI_app.Tests import get_stopwords
 
 

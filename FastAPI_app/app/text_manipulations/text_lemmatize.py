@@ -2,9 +2,8 @@ import pymorphy2
 from razdel import tokenize
 from pprint import pprint
 
-
 from .get_stopwords import get_stopwords
-
+from .clean_text import clean_text
 
 def text_lemmatize(text, stop_list: list | None = None):
     """
@@ -18,11 +17,10 @@ def text_lemmatize(text, stop_list: list | None = None):
         [6] проверка на стоп-слова
     Args:
         text: очищенный текст
-
-
+        stop_list (list | None): список со стоп-словами
 
     Returns:
-        list(str): лемматизированные слова текста пользователя
+        list[str]: лемматизированные слова текста пользователя
     """
     stop_words = get_stopwords() if  stop_list is None else stop_list
 
@@ -32,7 +30,7 @@ def text_lemmatize(text, stop_list: list | None = None):
     # [0]
     if not isinstance(text, str):
         text = str(text)
-
+    text = clean_text(text)
     # [1]
     tokens = list(tokenize(text))
     words = [_.text for _ in tokens]
