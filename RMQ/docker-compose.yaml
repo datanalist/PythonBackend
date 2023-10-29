@@ -1,0 +1,17 @@
+version: '3'
+services:
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"  # Порт для AMQP
+      - "15672:15672"  # Порт для RabbitMQ Management
+    volumes:
+      - ./rabbitmq-data:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "your-erlang-cookie"  # Замените "your-erlang-cookie" своим собственным куки
+    networks:
+      - rabbitmq-net
+
+networks:
+  rabbitmq-net:
+    driver: bridge
