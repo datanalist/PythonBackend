@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "pythonbackend"
+version = "0.1.0"
+description = "Solution homework #4"
+authors = ["datanalist"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
